@@ -5,8 +5,10 @@ import (
 )
 
 type Config struct {
-	Port        string `mapstructure:"port"`
-	DatabaseUrl string `mapstructure:"database_url"`
+	Port           string `mapstructure:"port"`
+	DatabaseUrl    string `mapstructure:"database_url"`
+	DatabaseName   string `mapstructure:"database_name"`
+	CollectionName string `mapstructure:"collection_name"`
 }
 
 func LoadConfig(configPath string) (*Config, error) {
