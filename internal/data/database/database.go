@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -53,4 +54,11 @@ func NewMongoDbClient(config MongoDbConfig) (*MongoDbClient, error) {
 		Collection: collection,
 	}, nil
 
+}
+
+func (c *MongoDbClient) Close() {
+	err := c.Client.Disconnect(context.Background())
+	if err != nil {
+		log.Printf("Failed to close MongoDB connection: %v", err)
+	}
 }
