@@ -45,6 +45,12 @@ func NewMongoDbClient(config MongoDbConfig) (*MongoDbClient, error) {
 	}
 
 	database := client.Database(config.Database)
+	collection := database.Collection(config.Collection)
 
-	return config, nil
+	return &MongoDbClient{
+		Client:     client,
+		Database:   database,
+		Collection: collection,
+	}, nil
+
 }
