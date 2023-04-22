@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -32,5 +33,11 @@ func NewMongoDbClient(config MongoDbConfig) (*MongoDbClient, error) {
 
 	clientOptions := options.Client().ApplyURI(connectionURI)
 	clientOptions.SetConnectTimeout(10 * time.Second)
+
+	client, err := mongo.Connect(context.Background(), clientOptions)
+	if err != nil {
+		return nil, err
+	}
+
 	return config, nil
 }
