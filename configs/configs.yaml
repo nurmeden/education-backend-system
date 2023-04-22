@@ -1,2 +1,4 @@
 port: 8080
-database_url: mongodb://localhost:27017/dbname
+database_url: mongodb://localhost:27017/taskdb
+database_name: ""
+collection_name: ""
