@@ -1,20 +1,17 @@
 package models
 
-import "time"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
-type Students struct {
-	ID        string `bson:"_id,omitempty" json:"id"`
-	FirstName string `bson:"firstName" json:"firstName"`
-	LastName  string `bson:"lastName" json:"lastName"`
-	Email     string `bson:"email" json:"email"`
+type Student struct {
+	ID        primitive.ObjectID   `bson:"_id,omitempty"`
+	Name      string               `bson:"name"`
+	Age       int                  `bson:"age"`
+	CourseIDs []primitive.ObjectID `bson:"course_ids"`
 }
 
-type Courses struct {
-	ID        string    `bson:"_id,omitempty" json:"id"`
-	Title     string    `bson:"title" json:"title"`
-	Content   string    `bson:"content" json:"content"`
-	CreatedAt time.Time `bson:"createdAt" json:"createdAt"`
-	UpdatedAt time.Time `bson:"updatedAt" json:"updatedAt"`
-	// Дополнительные поля вашей модели данных
-	// ...
+type Course struct {
+	ID   primitive.ObjectID `bson:"_id,omitempty"`
+	Name string             `bson:"name"`
 }
