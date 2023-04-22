@@ -39,5 +39,10 @@ func NewMongoDbClient(config MongoDbConfig) (*MongoDbClient, error) {
 		return nil, err
 	}
 
+	err = client.Ping(context.Background(), nil)
+	if err != nil {
+		return nil, err
+	}
+
 	return config, nil
 }
