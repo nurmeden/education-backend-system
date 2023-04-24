@@ -30,7 +30,6 @@ func main() {
 	{
 		api.POST("/students", studentHandler.CreateStudent)
 		api.GET("/students/:id", studentHandler.GetStudentByID)
-
 		auth := api.Group("/auth/")
 		{
 			auth.POST("/sign-up", studentHandler.CreateStudent)

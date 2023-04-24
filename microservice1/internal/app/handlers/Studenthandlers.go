@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -32,7 +33,7 @@ func (h *StudentHandler) CreateStudent(c *gin.Context) {
 		return
 	}
 
-	createdStudent, err := h.studentUsecase.CreateStudent(&student)
+	createdStudent, err := h.studentUsecase.CreateStudent(context.Background(), &student)
 	if err != nil {
 		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create student"})
@@ -45,7 +46,7 @@ func (h *StudentHandler) CreateStudent(c *gin.Context) {
 func (h *StudentHandler) GetStudentByID(c *gin.Context) {
 	studentID := c.Param("id")
 	fmt.Printf("studentID: %v\n", studentID)
-	student, err := h.studentUsecase.GetStudentByID(studentID)
+	student, err := h.studentUsecase.GetStudentByID(context.Background(), studentID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

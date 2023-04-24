@@ -12,10 +12,10 @@ import (
 )
 
 type StudentUsecase interface {
-	CreateStudent(student *model.Student) (*model.Student, error)
-	GetStudentByID(id string) (*model.Student, error)
-	UpdateStudent(student *model.Student) (*model.Student, error)
-	DeleteStudent(id string) error
+	CreateStudent(ctx context.Context, student *model.Student) (*model.Student, error)
+	GetStudentByID(ctx context.Context, id string) (*model.Student, error)
+	UpdateStudent(ctx context.Context, student *model.Student) (*model.Student, error)
+	DeleteStudent(ctx context.Context, id string) error
 	SignIn(signInData *model.SignInData) (*model.AuthToken, error)
 }
 
@@ -29,7 +29,7 @@ func NewStudentUsecase(studentRepo repository.StudentRepository) StudentUsecase 
 	}
 }
 
-func (u *studentUsecase) CreateStudent(student *model.Student) (*model.Student, error) {
+func (u *studentUsecase) CreateStudent(ctx context.Context, student *model.Student) (*model.Student, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(student.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
@@ -38,19 +38,19 @@ func (u *studentUsecase) CreateStudent(student *model.Student) (*model.Student, 
 
 	student.Password = string(hashedPassword)
 
-	return u.studentRepo.Create(context.Background(), student)
+	return u.studentRepo.Create(ctx, student)
 }
 
-func (u *studentUsecase) GetStudentByID(id string) (*model.Student, error) {
-	return u.studentRepo.Read(context.Background(), id)
+func (u *studentUsecase) GetStudentByID(ctx context.Context, id string) (*model.Student, error) {
+	return u.studentRepo.Read(ctx, id)
 }
 
-func (u *studentUsecase) UpdateStudent(student *model.Student) (*model.Student, error) {
-	return u.studentRepo.Update(context.Background(), student)
+func (u *studentUsecase) UpdateStudent(ctx context.Context, student *model.Student) (*model.Student, error) {
+	return u.studentRepo.Update(ctx, student)
 }
 
-func (u *studentUsecase) DeleteStudent(id string) error {
-	return u.studentRepo.Delete(context.Background(), id)
+func (u *studentUsecase) DeleteStudent(ctx context.Context, id string) error {
+	return u.studentRepo.Delete(ctx, id)
 }
 
 func (u *studentUsecase) SignIn(signInData *model.SignInData) (*model.AuthToken, error) {

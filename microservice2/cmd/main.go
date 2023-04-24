@@ -1,35 +1,29 @@
 package main
 
+import (
+	"log"
+
+	"github.com/gin-gonic/gin"
+)
+
 func main() {
-	// // Инициализация логгера
-	// // logger := log.New(os.Stdout, "", log.LstdFlags)
+	r := gin.Default()
+	courseAPI := r.Group("/api/courses")
+	{
+		courseAPI.POST("/", createCourse)
+		courseAPI.GET("/", getCourses)
+		courseAPI.GET("/:id", getCourseByID)
+		courseAPI.PUT("/:id", updateCourse)
+		courseAPI.DELETE("/:id", deleteCourse)
+	}
+	courseStudentsAPI := r.Group("/api/courses/:id/students")
+	{
+		courseStudentsAPI.GET("/", getCourseStudents)
+		courseStudentsAPI.POST("/", addStudentToCourse)
+		courseStudentsAPI.DELETE("/:studentID", removeStudentFromCourse)
+	}
+	if err := r.Run(":8080"); err != nil {
+		log.Fatal(err)
+	}
 
-	// client := database.SetupDatabase()
-	// defer client.Disconnect(context.Background())
-
-	// studentRepo, _ := repository.NewCoursesRepository(client, "taskdb", "student")
-
-	// studentUsecase := usecase.NewStudentUsecase(*studentRepo)
-
-	// studentHandler := handler.NewStudentHandler(studentUsecase)
-
-	// router := gin.Default()
-
-	// // Регистрация маршрутов
-	// api := router.Group("/api/")
-	// {
-	// 	api.POST("/students", studentHandler.CreateStudent)
-	// 	api.GET("/students/:id", studentHandler.GetStudentByID)
-
-	// 	auth := api.Group("/auth/")
-	// 	{
-	// 		auth.POST("/sign-up", studentHandler.CreateStudent)
-	// 		auth.POST("/sign-in", studentHandler.SignIn)
-	// 	}
-	// }
-	// // router.PUT("/students/:id", studentHandler.UpdateStudent)
-	// // router.DELETE("/students/:id", studentHandler.DeleteStudent)
-
-	// // Запуск HTTP-сервера
-	// router.Run(":8080")
 }
