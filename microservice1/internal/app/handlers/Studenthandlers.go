@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"microservice1/internal/app/model"
+	"microservice1/internal/app/usecase"
 	"net/http"
-	"task-backend/microservice1/internal/app/model"
-	"task-backend/microservice1/internal/app/usecase"
 
 	"github.com/gin-gonic/gin"
 )

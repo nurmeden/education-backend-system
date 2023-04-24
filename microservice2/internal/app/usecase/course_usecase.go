@@ -1,11 +1,11 @@
 package usecase
 
 import (
-	"task-backend/microservice2/internal/app/model"
-	"task-backend/microservice2/internal/app/repository"
+	"microservice2/internal/app/model"
+	"microservice2/internal/app/repository"
 )
 
-type CourseUsecase interface {
+type CourseUsecases interface {
 	GetCourses() ([]model.Course, error)
 	GetCourseByID(id string) (*model.Course, error)
 	CreateCourse(courseInput *model.CourseInput) (*model.Course, error)
@@ -16,19 +16,19 @@ type CourseUsecase interface {
 }
 
 // CourseService представляет сервис для работы с курсами
-type courseUsecase struct {
+type CourseUsecase struct {
 	courseRepo *repository.CourseRepository
 }
 
 // NewCourseService создает новый экземпляр сервиса курсов
-func NewCourseService(courseRepo *repository.CourseRepository) *courseUsecase {
-	return &courseUsecase{
+func NewCourseUsecase(courseRepo *repository.CourseRepository) *CourseUsecase {
+	return &CourseUsecase{
 		courseRepo: courseRepo,
 	}
 }
 
 // CreateCourse создает новый курс на основе входных параметров
-func (cs *courseUsecase) CreateCourse(courseInput *model.CourseInput) (*model.Course, error) {
+func (cs *CourseUsecase) CreateCourse(courseInput *model.CourseInput) (*model.Course, error) {
 	course, err := model.NewCourse(courseInput)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (cs *courseUsecase) CreateCourse(courseInput *model.CourseInput) (*model.Co
 }
 
 // UpdateCourse обновляет информацию о курсе на основе входных параметров
-func (cs *courseUsecase) UpdateCourse(courseID string, courseInput *model.CourseUpdateInput) (*model.Course, error) {
+func (cs *CourseUsecase) UpdateCourse(courseID string, courseInput *model.CourseUpdateInput) (*model.Course, error) {
 	course, err := cs.courseRepo.GetCourseByID(courseID)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (cs *courseUsecase) UpdateCourse(courseID string, courseInput *model.Course
 }
 
 // DeleteCourse удаляет курс по его идентификатору
-func (cs *courseUsecase) DeleteCourse(courseID string) error {
+func (cs *CourseUsecase) DeleteCourse(courseID string) error {
 	err := cs.courseRepo.DeleteCourse(courseID)
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func (cs *courseUsecase) DeleteCourse(courseID string) error {
 }
 
 // GetCourseByID возвращает курс по его идентификатору
-func (cs *courseUsecase) GetCourseByID(courseID string) (*model.Course, error) {
+func (cs *CourseUsecase) GetCourseByID(courseID string) (*model.Course, error) {
 	course, err := cs.courseRepo.GetCourseByID(courseID)
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func (cs *courseUsecase) GetCourseByID(courseID string) (*model.Course, error) {
 }
 
 // GetAllCourses возвращает все курсы
-func (cs *courseUsecase) GetAllCourses() ([]*model.Course, error) {
+func (cs *CourseUsecase) GetAllCourses() ([]*model.Course, error) {
 	courses, err := cs.courseRepo.GetAllCourses()
 	if err != nil {
 		return nil, err

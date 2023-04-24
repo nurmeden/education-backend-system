@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"task-backend/microservice1/internal/app/model"
-	"task-backend/microservice1/internal/app/repository"
+	"microservice1/internal/app/model"
+	"microservice1/internal/app/repository"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"

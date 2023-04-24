@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	handler "task-backend/microservice1/internal/app/handlers"
-	"task-backend/microservice1/internal/app/repository"
-	"task-backend/microservice1/internal/app/usecase"
-	"task-backend/microservice1/internal/database"
+	handler "microservice1/internal/app/handlers"
+	"microservice1/internal/app/repository"
+	"microservice1/internal/app/usecase"
+	"microservice1/internal/database"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,5 +40,5 @@ func main() {
 	// router.DELETE("/students/:id", studentHandler.DeleteStudent)
 
 	// Запуск HTTP-сервера
-	router.Run(":8080")
+	router.Run(":8000")
 }

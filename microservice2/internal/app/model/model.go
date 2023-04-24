@@ -1,5 +1,7 @@
 package model
 
+import "github.com/google/uuid"
+
 type Course struct {
 	ID          string   `json:"id"`
 	Name        string   `json:"name"`
@@ -45,4 +47,10 @@ func (c *Course) Update(courseInput *CourseUpdateInput) error {
 	}
 
 	return nil
+}
+
+// generateID генерирует уникальный идентификатор
+func generateID() string {
+	u := uuid.New()
+	return u.String()
 }

@@ -2,7 +2,7 @@ package http
 
 import (
 	"fmt"
-	handler "task-backend/microservice1/internal/app/handlers"
+	handler "microservice1/internal/app/handlers"
 
 	"github.com/gin-gonic/gin"
 )

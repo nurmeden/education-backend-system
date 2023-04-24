@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
-	"task-backend/microservice2/internal/app/model"
+	"microservice2/internal/app/model"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -19,13 +19,19 @@ import (
 // }
 
 type CourseRepository struct {
+	client     *mongo.Client
 	collection *mongo.Collection
 }
 
-func NewCourseRepository(collection *mongo.Collection) *CourseRepository {
-	return &CourseRepository{
-		collection: collection,
+func NewCourseRepository(client *mongo.Client, dbName string, collectionName string) (*CourseRepository, error) {
+	r := &CourseRepository{
+		client: client,
 	}
+	// Получение коллекции студентов
+	collection := client.Database(dbName).Collection(collectionName)
+	r.collection = collection
+
+	return r, nil
 }
 
 func (r *CourseRepository) GetCourseByID(id string) (*model.Course, error) {

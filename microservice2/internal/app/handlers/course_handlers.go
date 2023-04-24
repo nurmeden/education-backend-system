@@ -1,43 +1,104 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"microservice2/internal/app/model"
+	"microservice2/internal/app/usecase"
+	"net/http"
 
-func createCourse(c *gin.Context) {
-	// Обработка создания курса
+	"github.com/gin-gonic/gin"
+)
+
+// CourseController контроллер для операций с курсами
+type CourseController struct {
+	courseService usecase.CourseUsecase
 }
 
-func getCourses(c *gin.Context) {
-	// Обработка получения списка курсов
+// NewCourseController создает новый экземпляр контроллера CourseController
+func NewCourseController(courseService *usecase.CourseUsecase) *CourseController {
+	return &CourseController{
+		courseService: *courseService,
+	}
 }
 
-func getCourseByID(c *gin.Context) {
-	// Обработка получения курса по ID
+// CreateCourse обрабатывает запрос на создание нового курса
+func (cc *CourseController) CreateCourse(c *gin.Context) {
+	var courseInput model.CourseInput
+
+	// Извлечение данных о курсе из тела запроса
+	if err := c.ShouldBindJSON(&courseInput); err != nil {
+		fmt.Println("ok")
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Создание нового курса
+	course, err := cc.courseService.CreateCourse(&courseInput)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"data": course})
 }
 
-func updateCourse(c *gin.Context) {
-	// Обработка обновления данных курса
+// GetCourse обрабатывает запрос на получение информации о курсе по его ID
+func (cc *CourseController) GetCourse(c *gin.Context) {
+	courseID := c.Param("id")
+
+	// Получение информации о курсе по его ID
+	course, err := cc.courseService.GetCourseByID(courseID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": course})
 }
 
-func deleteCourse(c *gin.Context) {
-	// Обработка удаления курса
+// UpdateCourse обрабатывает запрос на обновление информации о курсе
+func (cc *CourseController) UpdateCourse(c *gin.Context) {
+	courseID := c.Param("id")
+
+	var courseUpdateInput model.CourseUpdateInput
+
+	// Извлечение данных для обновления курса из тела запроса
+	if err := c.ShouldBindJSON(&courseUpdateInput); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Обновление информации о курсе
+	course, err := cc.courseService.UpdateCourse(courseID, &courseUpdateInput)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": course})
 }
 
-func getCourseStudents(c *gin.Context) {
-	// Обработка получения списка студентов, записанных на курс с указанным ID
-	// courseID := c.Param("id")
-	// Получение студентов из базы данных MongoDB, записанных на указанный courseID
+// DeleteCourse обрабатывает запрос на удаление курса по его ID
+func (cc *CourseController) DeleteCourse(c *gin.Context) {
+	courseID := c.Param("id")
+
+	// Удаление курса
+	err := cc.courseService.DeleteCourse(courseID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Курс успешно удален"})
 }
 
-func addStudentToCourse(c *gin.Context) {
-	// Обработка добавления студента на курс с указанным ID
-	// courseID := c.Param("id")
-	// studentID := c.PostForm("student_id") // Предполагается, что идентификатор студента передается в теле POST-запроса
-	// Запись студента на курс в базу данных MongoDB
-}
+// func (cc *CourseController) GetCoursesByStudentID(c *gin.Context) {
+// 	studentID := c.Param("id")
+// 	courses, err := cc.courseService.GetCoursesByStudentID(studentID)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-func removeStudentFromCourse(c *gin.Context) {
-	// Обработка удаления студента с указанным ID из указанного курса
-	// courseID := c.Param("id")
-	// studentID := c.Param("studentID")
-	// Удаление записи студента с указанным ID из указанного курса в базе данных MongoDB
-}
+// 	c.JSON(http.StatusOK, gin.H{"data": courses})
+// }
