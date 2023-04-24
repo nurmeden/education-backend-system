@@ -14,5 +14,6 @@ func SetupDatabase() *mongo.Client {
 		fmt.Printf("Failed to connect to MongoDB: %v", err)
 		return nil
 	}
+	fmt.Printf("client: %v\n", client)
 	return client
 }

@@ -2,11 +2,13 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"task-backend/microservice1/internal/app/model"
 	"task-backend/microservice1/internal/app/repository"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type StudentUsecase interface {
@@ -28,22 +30,26 @@ func NewStudentUsecase(studentRepo repository.StudentRepository) StudentUsecase 
 }
 
 func (u *studentUsecase) CreateStudent(student *model.Student) (*model.Student, error) {
-	// Реализация логики создания студента
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(student.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("hashedPassword: %v\n", hashedPassword)
+
+	student.Password = string(hashedPassword)
+
 	return u.studentRepo.Create(context.Background(), student)
 }
 
 func (u *studentUsecase) GetStudentByID(id string) (*model.Student, error) {
-	// Реализация логики получения студента по ID
 	return u.studentRepo.Read(context.Background(), id)
 }
 
 func (u *studentUsecase) UpdateStudent(student *model.Student) (*model.Student, error) {
-	// Реализация логики обновления информации о студенте
 	return u.studentRepo.Update(context.Background(), student)
 }
 
 func (u *studentUsecase) DeleteStudent(id string) error {
-	// Реализация логики удаления студента
 	return u.studentRepo.Delete(context.Background(), id)
 }
 

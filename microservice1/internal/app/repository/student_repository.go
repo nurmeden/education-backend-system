@@ -11,17 +11,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Student - модель студента
-
-// StudentRepository - репозиторий студентов MongoDB
 type StudentRepository struct {
 	client     *mongo.Client
 	collection *mongo.Collection
 }
 
-// NewStudentRepository - создание нового репозитория студентов MongoDB
 func NewStudentRepository(client *mongo.Client, dbName string, collectionName string) (*StudentRepository, error) {
-	// Создание экземпляра репозитория
 	r := &StudentRepository{
 		client: client,
 	}
@@ -35,10 +30,16 @@ func NewStudentRepository(client *mongo.Client, dbName string, collectionName st
 
 // Create - создание нового студента
 func (r *StudentRepository) Create(ctx context.Context, student *model.Student) (*model.Student, error) {
-	_, err := r.collection.InsertOne(ctx, student)
+	err := r.client.Ping(ctx, nil)
 	if err != nil {
+		return nil, fmt.Errorf("failed to ping MongoDB: %v", err)
+	}
+	_, err = r.collection.InsertOne(ctx, student)
+	if err != nil {
+		fmt.Println("osinda")
 		return nil, fmt.Errorf("failed to create student: %v", err)
 	}
+	fmt.Println("bari jaksi")
 	return student, nil
 }
 

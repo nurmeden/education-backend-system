@@ -17,7 +17,7 @@ func main() {
 	client := database.SetupDatabase()
 	defer client.Disconnect(context.Background())
 
-	studentRepo, _ := repository.NewStudentRepository(client, "taskdb", "student")
+	studentRepo, _ := repository.NewStudentRepository(client, "taskdb", "students")
 
 	studentUsecase := usecase.NewStudentUsecase(*studentRepo)
 

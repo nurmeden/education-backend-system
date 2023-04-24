@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"task-backend/microservice1/internal/app/model"
 	"task-backend/microservice1/internal/app/usecase"
@@ -24,9 +25,7 @@ func NewStudentHandler(studentUsecase usecase.StudentUsecase) *StudentHandler {
 
 func (h *StudentHandler) CreateStudent(c *gin.Context) {
 	var student model.Student
-	student.FirstName = "Dulat"
-	student.Age = 30
-	student.LastName = "Nurmeden"
+
 	err := c.ShouldBindJSON(&student)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to decode request body"})
@@ -35,6 +34,7 @@ func (h *StudentHandler) CreateStudent(c *gin.Context) {
 
 	createdStudent, err := h.studentUsecase.CreateStudent(&student)
 	if err != nil {
+		log.Println(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create student"})
 		return
 	}
